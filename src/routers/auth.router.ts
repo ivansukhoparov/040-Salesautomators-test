@@ -1,17 +1,10 @@
 import {Request, Response, Router} from "express";
 import {client} from "../settings";
+import {btoa} from "buffer";
 
 const authUrl = "https://oauth.pipedrive.com/oauth/token"
 
 export const authRouter = Router()
-
-const authRequest = {
-    "grant_type": "authorization_code",
-    "code": "AUTHORIZATION_CODE",
-    "redirect_uri": "YOUR_CALLBACK_URL",
-    "client_id": "YOUR_CLIENT_ID",
-    "client_secret": "YOUR_CLIENT_SECRET"
-}
 
 authRouter.get("/callback", async (req: Request, res: Response) => {
     const code = req.query.code
@@ -21,9 +14,9 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
             grant_type: "authorization_code",
             code: code,
             redirect_uri: "https://040-salesautomators-test.vercel.app/auth/callback",
-            client_id: client.id,
-            client_secret: client.secret
         }
+        const auth = btoa(`${client.id}:${client.secret}`)
+
         console.log(authData)
         const token = await fetch(
             authUrl,
@@ -31,11 +24,12 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'authorization': auth
                 },
                 body: JSON.stringify(authData),
             })
 
-        console.log(token)
+        console.log("token",token)
         res.status(200).send(token)
 
     } else {
