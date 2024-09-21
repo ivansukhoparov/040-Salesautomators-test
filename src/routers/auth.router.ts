@@ -25,7 +25,8 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
             },
             body: JSON.stringify(authData),
         }
-        console.log(authData)
+
+        console.log(fetchData)
 
         const token = await fetch(authUrl, fetchData)
 
