@@ -17,6 +17,14 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
     const code = req.query.code
     if (code) {
 
+        const authData = {
+            grant_type: "authorization_code",
+            code: code,
+            redirect_uri: "https://040-salesautomators-test.vercel.app/auth/callback",
+            client_id: client.id,
+            client_secret: client.secret
+        }
+        console.log(authData)
         const token = await fetch(
             authUrl,
             {
@@ -24,15 +32,9 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify({
-                        grant_type: "authorization_code",
-                        code: code,
-                        redirect_uri: "https://040-salesautomators-test.vercel.app/auth/callback",
-                        client_id: client.id,
-                        client_secret: client.secret
-                    }
-                ),
+                body: JSON.stringify(authData),
             })
+
         console.log(token)
         res.status(200).send(token)
 
