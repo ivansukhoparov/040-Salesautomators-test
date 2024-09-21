@@ -1,6 +1,6 @@
 import express from "express"
 import {app} from "./app";
-
+export const version = "0.0.3"
 
 const port = 3002
 
