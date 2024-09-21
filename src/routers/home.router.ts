@@ -1,6 +1,6 @@
 import {Request, Response, Router} from "express";
-import {version} from "../index";
 
+const version = "0.0.4"
 export const homeRouter = Router()
 
 homeRouter.get("/", async (req: Request, res: Response) => {
