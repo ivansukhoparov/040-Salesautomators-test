@@ -17,19 +17,19 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
         }
         const auth = btoa(`${client.id}:${client.secret}`)
 
+        const fetchData = {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+                'Authorization': 'Basic ' + auth
+            },
+            body: JSON.stringify(authData),
+        }
         console.log(authData)
-        const token = await fetch(
-            authUrl,
-            {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                    'Authorization': 'Basic ' + auth
-                },
-                body: JSON.stringify(authData),
-            })
 
-        console.log("token",token)
+        const token = await fetch(authUrl, fetchData)
+
+        console.log("token", token)
         res.status(200).send(token)
 
     } else {
