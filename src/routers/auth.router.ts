@@ -24,7 +24,7 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'authorization': 'Basic ' + auth
+                    'Authorization': 'Basic ' + auth
                 },
                 body: JSON.stringify(authData),
             })
