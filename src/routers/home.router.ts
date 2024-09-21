@@ -4,6 +4,6 @@ import {version} from "../index";
 export const homeRouter = Router()
 
 homeRouter.get("/", async (req: Request, res: Response) => {
-    console.log("s")
-    res.status(200).json(`this is test task for Salesautomators v.${version}`);
+    const responseMsg = `this is test task for Salesautomators v.${version}`
+    res.status(200).json(responseMsg);
 })
