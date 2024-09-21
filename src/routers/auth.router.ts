@@ -15,13 +15,13 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
             code: code,
             redirect_uri: "https://040-salesautomators-test.vercel.app/auth/callback",
         }
-        const auth = btoa(`${client.id}:${client.secret}`)
+        const credentials  = btoa(`${client.id}:${client.secret}`)
 
         const fetchData = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/x-www-form-urlencoded',
-                'Authorization': 'Basic ' + auth
+                'Authorization': 'Basic ' + credentials
             },
             body: JSON.stringify(authData),
         }
@@ -31,7 +31,8 @@ authRouter.get("/callback", async (req: Request, res: Response) => {
         const token = await fetch(authUrl, fetchData)
 
         console.log("token", token)
-        res.status(200).send(token)
+        console.log("token", token.body)
+        res.status(200).json(token)
 
     } else {
         res.status(400).send("no code or invalid")
