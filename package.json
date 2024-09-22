@@ -6,6 +6,7 @@
   "author": "ivansukhoparov <rbcdaaa@gmail.com>",
   "license": "MIT",
   "dependencies": {
+    "@pipedrive/app-extensions-sdk": "^0.10.2",
     "@types/jest": "^29.5.8",
     "@types/supertest": "^2.0.16",
     "dotenv": "^16.4.5",

@@ -8,6 +8,6 @@ export const jobsRouter = Router()
 jobsRouter.get("/form", async (req: Request, res: Response) => {
     const responseMsg = `this is test task for Salesautomators v.${appVersion}`
     res.status(200)
-    res.send(newJobForm);
+    res.json(newJobForm);
 })
 
