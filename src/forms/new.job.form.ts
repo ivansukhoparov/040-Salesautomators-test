@@ -11,7 +11,7 @@ export  const newJobForm =`
 <body>
 <script>
     (async function() {
-      const sdk = await new AppExtensionsSDK().initialize();
+      const sdk = await new AppExtensionsSDK({ identifier: '17a03000-0f16-4af4-a34d-c2ee11dbb250' }).initialize();
           console.log(sdk)
     })();
 
