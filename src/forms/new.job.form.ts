@@ -1,3 +1,5 @@
+import {appVersion} from "../version";
+
 export  const newJobForm =`
     <!DOCTYPE html>
 <html lang="en">
@@ -10,8 +12,9 @@ export  const newJobForm =`
 <script>
     (async function() {
       const sdk = await new AppExtensionsSDK().initialize();
+          console.log(sdk)
     })();
-    console.log(sdk)
+
   </script>
 <form>
     <!-- Client details -->
@@ -61,5 +64,6 @@ export  const newJobForm =`
     <button type="submit">Create job</button>
     <button type="button">Save info</button>
 </form>
+<p>${appVersion}</p>
 </body>
 </html>`
