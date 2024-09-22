@@ -10,10 +10,23 @@ export  const newJobForm =`
 </head>
 <body>
 <script>
-    (async function() {
-      const sdk = await new AppExtensionsSDK({ identifier: '17a03000-0f16-4af4-a34d-c2ee11dbb250' }).initialize({ size: { height: 500 } });
-          console.log(sdk.userSettings)
-    })();
+let sdk
+ console.log("SDK init");
+
+
+  (function() {
+    var script = document.createElement('script');
+    script.src = "https://cdn.pipedrive.com/web-apps/extensions-sdk/v1/extension-sdk.js";
+    script.onload = function() {
+      if (window.PipedriveAppExtensionsSDK) {
+        window.PipedriveAppExtensionsSDK.initialize();
+        console.log('SDK Initialized');
+      } else {
+        console.error('Pipedrive SDK not loaded');
+      }
+    };
+    document.head.appendChild(script);
+  })();
 
   </script>
 <form>
