@@ -11,8 +11,9 @@ app.use(express.json())
 // app.use(bodyParser.json());
 app.use(express.static('public'));
 app.set('views', path.join(__dirname, '../views'));
-app.set('view engine', 'hbs');
-
+app.set('view engine', 'ejs');
+// app.set('view engine', 'html');
+// app.engine('html', require('hbs').__express);
 app.use("/", homeRouter)
 app.use("/auth", authRouter)
 app.use("/ui", uiRouter)
