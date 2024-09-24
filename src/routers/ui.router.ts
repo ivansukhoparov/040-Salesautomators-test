@@ -1,13 +1,16 @@
-import express, {Request, Response, Router} from "express";
-import {appVersion} from "../version";
-import * as fs from "fs";
-import {newJobForm} from "../forms/new.job.form";
+import {Request, Response, Router} from "express";
+import path from "path";
 
 export const uiRouter = Router()
 
 uiRouter.get("/modal", async (req: Request, res: Response) => {
-    const responseMsg = `this is test task for Salesautomators v.${appVersion}`
-    res.status(200)
-    res.render("modal");
+    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
 })
 
+uiRouter.get('/panel', async (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
+});
+
+uiRouter.get('/hello', async (req: Request, res: Response) => {
+    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
+});
