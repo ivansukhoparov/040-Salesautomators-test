@@ -47,11 +47,6 @@ export type CallbackHandlerType = {
 }
 
 export type AuthDBModel = {
-    userId:number
-    name:string
-    email: string
-    companyId: number
-    locale: string
     accessToken: string
     expiresAt: number
     refreshToken: string

@@ -25,15 +25,12 @@ export class AuthService {
         if (oauthData === null) return {success: false, target: null}
         console.log(oauthData)
 console.log(1)
-        const refreshedToken = await this.refreshAccessToken(oauthData.refreshToken)
-        console.log("refreshedToken",refreshedToken)
-        const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
-        if (userData === null) return {success: false, target: null}
+
 console.log(2)
-        const isCreated = await this.authRepository.createUser(oauthData, userData)
+        const isCreated = await this.authRepository.createUser(oauthData)
         if (!isCreated) return {success: false, target: null}
 console.log(3)
-        const appFieldsAdded = await this.initJobFields(userData.userId)
+        const appFieldsAdded = await this.initJobFields(oauthData.apiDomain)
         if (!appFieldsAdded) return {success: false, target: null}
 console.log(4)
         return {
@@ -42,16 +39,16 @@ console.log(4)
         }
     }
 
-    async getAccessToken(userId: number) {
+    async getAccessToken(apiDomain: string) {
         const currentTime = new Date().getTime()
 
-        const user = await this.authRepository.getUser(userId)
+        const user = await this.authRepository.getUser(apiDomain)
         if (user === null) return null
 
         if (user.expiresAt < currentTime) {
             const refreshedToken: RefreshTokenDataType | null = await this.refreshAccessToken(user.refreshToken)
             if (refreshedToken === null) return null
-            const isUpdated = await this.authRepository.updateTokens(refreshedToken, currentTime, user.userId)
+            const isUpdated = await this.authRepository.updateTokens(refreshedToken, currentTime, apiDomain)
             if (!isUpdated) return null
 
             return {
@@ -150,8 +147,8 @@ console.log("authResponseRaw",authResponseRaw)
         }
     }
 
-    async initJobFields(userId: number):Promise<boolean> {
-        const accessToken = await this.getAccessToken(userId)
+    async initJobFields(apiDomain: string):Promise<boolean> {
+        const accessToken = await this.getAccessToken(apiDomain)
         if (!accessToken) return false
 
         const fetchInit: RequestInit = {

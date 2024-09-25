@@ -15,16 +15,11 @@ export class AuthRepository {
     constructor(@inject(MongoDbAdapter) protected db: MongoDbAdapter) {
     }
 
-    async createUser(authData: OAuthDataType, userData: UserDataType): Promise<boolean> {
+    async createUser(authData: OAuthDataType): Promise<boolean> {
         try {
             const createUserDto: AuthDBModel = {
-                userId: userData.userId,
-                name: userData.name,
-                email: userData.email,
-                companyId: userData.companyId,
-                locale: userData.locale,
                 accessToken: authData.accessToken,
-                expiresAt: authData.expiresIn + authData.createdAt,
+                expiresAt: authData.expiresIn*1000 + authData.createdAt,
                 refreshToken: authData.refreshToken,
                 apiDomain: authData.apiDomain,
             }
@@ -39,7 +34,7 @@ export class AuthRepository {
         }
     }
 
-    async updateTokens(authData: RefreshTokenDataType, createdAt:number, userId: number): Promise<boolean> {
+    async updateTokens(authData: RefreshTokenDataType, createdAt:number, apiDomain: string): Promise<boolean> {
         try {
             const updateDto: UpdateTokenModel = {
                 accessToken: authData.accessToken,
@@ -49,7 +44,7 @@ export class AuthRepository {
             const result: UpdateResult<AuthDBModel> = await this.db
                 .connect
                 .collection<AuthDBModel>("users")
-                .updateOne({userId: userId}, {$set: updateDto})
+                .updateOne({apiDomain: apiDomain}, {$set: updateDto})
             return result.matchedCount === 1
         } catch (e) {
             console.log(e)
@@ -57,12 +52,12 @@ export class AuthRepository {
         }
     }
 
-    async getUser(userId: number): Promise<UserType | null> {
+    async getUser(apiDomain: string): Promise<UserType | null> {
         try {
             const user: WithId<AuthDBModel> | null = await this.db
                 .connect
                 .collection<AuthDBModel>("users")
-                .findOne({userId: userId})
+                .findOne({apiDomain: apiDomain})
             if (user) {
                 return this._mapper(user)
             } else {

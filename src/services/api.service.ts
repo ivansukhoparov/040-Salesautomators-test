@@ -11,8 +11,8 @@ export class ApiService {
     constructor(@inject(AccessTokenService) private accessTokenService: AccessTokenService) {
     }
 
-    async createNewJob(userId: number, createJobRawDto: newJobRawType) {
-        const accessToken = await this.accessTokenService.authService.getAccessToken(userId)
+    async createNewJob(apiDomain: string, createJobRawDto: newJobRawType) {
+        const accessToken = await this.accessTokenService.authService.getAccessToken(apiDomain)
         if (!accessToken) return false
 
         const newJobDto = {

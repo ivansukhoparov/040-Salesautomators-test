@@ -11,9 +11,10 @@ export class ApiController {
     }
 
     async newJob(req: Request, res: Response) {
-        const {userId} = req.query
+        const apiDomain = "req.quer"
+        console.log("req",req.query)
         const newJobRawDto:newJobRawType = req.body
-        const isCreated = await this.apiService.createNewJob(Number(userId), newJobRawDto)
+        const isCreated = await this.apiService.createNewJob(apiDomain, newJobRawDto)
     }
 
 }
