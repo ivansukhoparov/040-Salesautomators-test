@@ -162,7 +162,7 @@ console.log("urls.client.callback",urls.client.callback)
             redirect: "follow"
         };
 
-        const response = await fetch(`https://${accessToken.target}/api/v1/deals?api_token=${accessToken.accessToken}`, fetchInit)
+        const response = await fetch(`${accessToken.target}/api/v1/deals?api_token=${accessToken.accessToken}`, fetchInit)
 
         const result = await response.json()
         console.log("initJobFields",result)
