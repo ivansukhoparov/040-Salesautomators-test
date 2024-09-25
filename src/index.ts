@@ -1,11 +1,9 @@
-import express from "express"
-import {app} from "./app";
+import "reflect-metadata"
+import {App} from "./app";
+import {container} from "./composition-root";
 
 
 const port = 3002
+const app:App = container.resolve<App>(App)
 
-app.listen(port, async ()=>{
-    console.log(`app start on port ${port}`);
-    console.log(`open in browser http://localhost:${port}`);
-})
-
+app.start(port)
