@@ -70,7 +70,7 @@ console.log(4)
             formData.append('grant_type', 'authorization_code');
             formData.append('code', `${code}`);
             formData.append('redirect_uri', urls.client.callback);
-
+console.log("urls.client.callback",urls.client.callback)
             const credentials = btoa(`${client.id}:${client.secret}`)
             const fetchInit: RequestInit = {
                 method: 'POST',
