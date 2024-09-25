@@ -83,7 +83,7 @@ console.log(4)
 
             const response = await fetch(urls.api.authUrl, fetchInit)
             const authResponseRaw: OAuthRawResponseType = await response.json()
-
+            console.log("authResponseRaw",authResponseRaw)
             return {
                 accessToken: authResponseRaw.access_token,
                 expiresIn: authResponseRaw.expires_in,
