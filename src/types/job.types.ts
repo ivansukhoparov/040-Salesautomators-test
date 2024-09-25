@@ -16,3 +16,4 @@ export type newJobRawType = {
     end_time: string
     test: string
 }
+
