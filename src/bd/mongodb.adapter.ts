@@ -9,10 +9,10 @@ import {INTERVALS} from "../utils/intervals";
 export class MongoDbAdapter {
   private client: MongoClient;
   private dbNAme:string = "pipedriveApp";
-  private dataBase: Db;
+  private dataBase!: Db;
 
   constructor() {
-    this.client = new MongoClient(urls.app.mongo);
+    this.client = new MongoClient(urls.app.mongo!);
   }
 
   async init() {
@@ -45,12 +45,4 @@ export class MongoDbAdapter {
     return this.dataBase;
   }
 
-  mapper<T>(input: WithId<Omit<T, 'id'>>): T {
-    const keys = Object.keys(input);
-    return keys.reduce((acc: any, key: string) => {
-      if (key === '_id') acc.id = input._id.toString();
-      else acc[key] = input[key];
-      return acc;
-    }, {});
-  }
 }
