@@ -25,6 +25,8 @@ export class AuthService {
         if (oauthData === null) return {success: false, target: null}
         console.log(oauthData)
 console.log(1)
+        const refreshedToken = this.refreshAccessToken(oauthData.refreshToken)
+        console.log("refreshedToken",refreshedToken)
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
         if (userData === null) return {success: false, target: null}
 console.log(2)
