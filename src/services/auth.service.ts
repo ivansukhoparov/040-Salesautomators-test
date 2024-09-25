@@ -23,16 +23,12 @@ export class AuthService {
     async callbackHandler(code: string) {
         const oauthData: OAuthDataType | null = await this.oauth(code)
         if (oauthData === null) return {success: false, target: null}
-        console.log(oauthData)
-console.log(1)
 
-console.log(2)
         const isCreated = await this.authRepository.createUser(oauthData)
         if (!isCreated) return {success: false, target: null}
-console.log(3)
+
         const appFieldsAdded = await this.initJobFields(oauthData.apiDomain)
         if (!appFieldsAdded) return {success: false, target: null}
-console.log(4)
         return {
             success: true,
             target: oauthData.apiDomain
@@ -69,7 +65,7 @@ console.log(4)
             formData.append('grant_type', 'authorization_code');
             formData.append('code', `${code}`);
             formData.append('redirect_uri', urls.client.callback);
-console.log("urls.client.callback",urls.client.callback)
+
             const credentials = btoa(`${client.id}:${client.secret}`)
             const fetchInit: RequestInit = {
                 method: 'POST',
@@ -82,7 +78,7 @@ console.log("urls.client.callback",urls.client.callback)
 
             const response = await fetch(urls.api.authUrl, fetchInit)
             const authResponseRaw: OAuthRawResponseType = await response.json()
-console.log("authResponseRaw",authResponseRaw)
+
             return {
                 accessToken: authResponseRaw.access_token,
                 expiresIn: authResponseRaw.expires_in,
@@ -103,7 +99,7 @@ console.log("authResponseRaw",authResponseRaw)
             }
             const response = await fetch(`https://api.pipedrive.com/v1/users/me?api_token=${accessToken}`, fetchInit)
             const userResponseRaw: UserRawResponseType = await response.json()
-            console.log(userResponseRaw)
+
             return {
                 userId: userResponseRaw.data.id,
                 name: userResponseRaw.data.name,
