@@ -12,7 +12,7 @@ import {InsertOneResult, ObjectId, UpdateResult, WithId} from "mongodb";
 
 @injectable()
 export class AuthRepository {
-    constructor(@inject(MongoDbAdapter) private db: MongoDbAdapter) {
+    constructor(@inject(MongoDbAdapter) protected db: MongoDbAdapter) {
     }
 
     async createUser(authData: OAuthDataType, userData: UserDataType): Promise<boolean> {

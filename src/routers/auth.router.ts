@@ -1,20 +1,8 @@
 import {Router} from "express";
-import {inject, injectable} from "inversify";
-import {AuthController} from "../controllers/auth.controller";
+import {AuthController} from "./controllers/auth.controller";
+import {container} from "../composition-root";
 
-@injectable()
-export class AuthRouter {
-    private router = Router()
+const authController: AuthController = container.resolve<AuthController>(AuthController)
+export const authRouter = Router()
 
-    constructor(@inject(AuthController) private authController: AuthController) {
-        this.init()
-    }
-
-    init() {
-        this.router.get("/callback", this.authController.auth)
-    }
-
-    get getRouter(){
-        return this.router
-    }
-}
+authRouter.get("/callback", authController.newAuth.bind(authController))

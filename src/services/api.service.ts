@@ -2,6 +2,7 @@ import {inject, injectable} from "inversify";
 import {AuthService} from "./auth.service";
 import {newJobRawType} from "../types/job.types";
 import {newDealFields} from "../utils/job.fields";
+import {AuthRepository} from "../repositories/auth.repository";
 
 @injectable()
 export class ApiService {

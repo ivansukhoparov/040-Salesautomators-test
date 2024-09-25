@@ -14,16 +14,17 @@ import {AuthRepository} from "../repositories/auth.repository";
 @injectable()
 export class AuthService {
     constructor(@inject(AuthRepository) private authRepository: AuthRepository) {
+
     }
 
-    async callbackHandler(code: string): Promise<CallbackHandlerType> {
+    async callbackHandler(code: string) {
         const oauthData: OAuthDataType | null = await this.oauth(code)
-        if (oauthData === null) return {success: false}
+        if (oauthData === null) return {success: false, target: null}
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
-        if (userData === null) return {success: false}
+        if (userData === null) return {success: false, target: null}
 
         const isCreated = await this.authRepository.createUser(oauthData, userData)
-        if (!isCreated) return {success: false}
+        if (!isCreated) return {success: false, target: null}
 
         return {
             success: true,

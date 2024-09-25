@@ -1,21 +1,9 @@
-import {Request, Response, Router} from "express";
-import {inject, injectable} from "inversify";
-import {ApiService} from "../services/api.service";
-import {ApiController} from "../controllers/api.controller";
+import {Router} from "express";
+import {ApiController} from "./controllers/api.controller";
+import {container} from "../composition-root";
 
-@injectable()
-export class ApiRouter {
-    private router = Router()
+const apiController: ApiController = container.resolve<ApiController>(ApiController)
 
-    constructor(@inject(ApiController) private apiController: ApiController) {
-        this.init()
-    }
+export const apiRouter = Router()
 
-    init() {
-        this.router.post("/new-job", this.apiController.newJob)
-    }
-
-    get getRouter() {
-        return this.router
-    }
-}
+apiRouter.get("/new-job", apiController.newJob.bind(apiController))
