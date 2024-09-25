@@ -103,6 +103,7 @@ console.log(1)
             }
             const response = await fetch('https://api.pipedrive.com/v1/users/me?api_token=YOUR_ACCESS_TOKEN', fetchInit)
             const userResponseRaw: UserRawResponseType = await response.json()
+            console.log(userResponseRaw)
             return {
                 userId: userResponseRaw.data.id,
                 name: userResponseRaw.data.name,
