@@ -102,7 +102,7 @@ console.log("urls.client.callback",urls.client.callback)
             const fetchInit: RequestInit = {
                 method: 'GET',
             }
-            const response = await fetch('https://api.pipedrive.com/v1/users/me?api_token=YOUR_ACCESS_TOKEN', fetchInit)
+            const response = await fetch(`https://api.pipedrive.com/v1/users/me?api_token=${accessToken}`, fetchInit)
             const userResponseRaw: UserRawResponseType = await response.json()
             console.log(userResponseRaw)
             return {
