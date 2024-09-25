@@ -1,17 +1,18 @@
 import {client, urls} from "../settings";
 import {btoa} from "buffer";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
 import {
     CallbackHandlerType,
     OAuthDataType,
-    OAuthRawResponseType,
+    OAuthRawResponseType, RefreshTokenDataType, UpdateTokenModel,
     UserDataType,
     UserRawResponseType
 } from "../types/auth.types";
+import {AuthRepository} from "../repositories/auth.repository";
 
 @injectable()
 export class AuthService {
-    constructor() {
+    constructor(@inject(AuthRepository) private authRepository:AuthRepository) {
     }
 
     async callbackHandler(code: string): Promise<CallbackHandlerType> {
@@ -20,18 +21,31 @@ export class AuthService {
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
         if (userData === null) return {success:false}
 
+        const isCreated = await this.authRepository.createUser(oauthData,userData)
+        if (!isCreated) return {success:false}
 
         return {
             success: true,
             target: oauthData.apiDomain
         }
     }
-    async createNewUser(authData:OAuthDataType,userData:UserDataType){
 
-    }
+    async getAccessToken(userId:number){
+        const currentTime = new Date().getTime()
 
-    async getAccessToken(userId:string){
+        const user = await this.authRepository.getUser(userId)
+        if (user === null) return null
 
+        if (user.expiresAt<currentTime){
+           const refreshedToken:RefreshTokenDataType|null = await this.refreshAccessToken(user.refreshToken)
+            if (refreshedToken===null) return null
+            const isUpdated = await this.authRepository.updateTokens(refreshedToken,currentTime,user.userId)
+            if (!isUpdated) return null
+
+            return refreshedToken.accessToken
+        }  else {
+            return user.accessToken
+        }
     }
 
     async oauth(code: string): Promise<OAuthDataType | null> {
@@ -87,7 +101,7 @@ export class AuthService {
         }
     }
 
-    async refreshAccessToken(refreshToken:string){
+    async refreshAccessToken(refreshToken:string):Promise<RefreshTokenDataType|null>{
         try {
             const formData = new URLSearchParams();
             formData.append('grant_type', 'refresh_token');

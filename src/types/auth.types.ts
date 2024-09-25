@@ -1,3 +1,5 @@
+import exp from "constants";
+
 export type OAuthRawResponseType =
     {
         access_token: string
@@ -61,5 +63,11 @@ export type UserType = {id:string} & AuthDBModel
 export type UpdateTokenModel = {
     accessToken: string
     expiresAt: number
+    refreshToken: string
+}
+
+export type RefreshTokenDataType = {
+    accessToken: string
+    expiresIn: number
     refreshToken: string
 }
