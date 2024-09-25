@@ -1,16 +1,35 @@
 import {Request, Response, Router} from "express";
 import path from "path";
+import {injectable} from "inversify";
+import {appVersion} from "../version";
 
-export const uiRouter = Router()
 
-uiRouter.get("/modal", async (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
-})
+@injectable()
+export class UiRouter {
+    private router = Router()
 
-uiRouter.get('/panel', async (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
-});
+    constructor() {
+        this.init()
+    }
 
-uiRouter.get('/hello', async (req: Request, res: Response) => {
-    res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
-});
+    init() {
+        this.router.get("/modal", async (req: Request, res: Response) => {
+            res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
+        })
+
+        this.router.get('/panel', async (req: Request, res: Response) => {
+            res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
+        });
+
+        this.router.get('/hello', async (req: Request, res: Response) => {
+            res.sendFile(path.join(__dirname, '../../public/modal-new-job.html'));
+        });
+    }
+
+    get getRouter(){
+        return this.router
+    }
+}
+
+
+
