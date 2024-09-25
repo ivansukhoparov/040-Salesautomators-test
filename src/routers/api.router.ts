@@ -1,22 +1,21 @@
 import {Request, Response, Router} from "express";
-import {injectable} from "inversify";
+import {inject, injectable} from "inversify";
+import {ApiService} from "../services/api.service";
+import {ApiController} from "../controllers/api.controller";
 
 @injectable()
-export class ApiRouter{
-   private router = Router()
+export class ApiRouter {
+    private router = Router()
 
-    constructor() {
-       this.init()
+    constructor(@inject(ApiController) private apiController: ApiController) {
+        this.init()
     }
 
-   init(){
-      this.router.post("/new-job", async (req: Request, res: Response) => {
-           console.log(req.query)
-           console.log(req.body)
-       })
-   }
+    init() {
+        this.router.post("/new-job", this.apiController.newJob)
+    }
 
-   get getRouter(){
-       return this.router
-   }
+    get getRouter() {
+        return this.router
+    }
 }
