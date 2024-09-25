@@ -1,7 +1,5 @@
 import {Request, Response, Router} from "express";
-import {appVersion} from "../version";
 import {inject, injectable} from "inversify";
-import {AuthController} from "../controllers/auth.controller";
 
 @injectable()
 export class HomeRouter {
@@ -13,7 +11,7 @@ export class HomeRouter {
 
     init() {
         this.router.get("/", async (req: Request, res: Response) => {
-            const responseMsg = `this is test task for Salesautomators v.${appVersion}`
+            const responseMsg = `this is test task for Salesautomators`
             res.status(200).json(responseMsg);
         })
     }

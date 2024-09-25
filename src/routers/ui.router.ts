@@ -1,7 +1,6 @@
 import {Request, Response, Router} from "express";
 import path from "path";
 import {injectable} from "inversify";
-import {appVersion} from "../version";
 
 
 @injectable()
