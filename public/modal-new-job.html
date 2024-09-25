@@ -20,38 +20,40 @@
 <script>
     (async function () {
         const sdk = await new AppExtensionsSdk().initialize();
-        console.log(sdk)
+        await sdk.execute(AppExtensionsSdk.Command.RESIZE, { width: 1000, height: 800 });
     })();
 </script>
-<form id="formElem">
+
+<form id="newJobForm">
     <!-- Client details -->
     <div>
         <h3>Client details</h3>
-        <input id="first_name"  name="first_name" type="text" placeholder="First name">
+        <input id="first_name" name="first_name" type="text" placeholder="First name">
         <input id="last_name" name="last_name" type="text" placeholder="Last name">
         <input id="phone" name="phone" type="text" placeholder="Phone">
-        <input id="email"  name="email"  type="email" placeholder="Email">
+        <input id="email" name="email" type="email" placeholder="Email">
     </div>
 
     <!-- Job type -->
     <div>
         <h3>Job type</h3>
-        <select id="job_type"  name="job_type" >
+        <select id="job_type" name="job_type">
             <option>Select job type</option>
         </select>
-        <select id="job_title"  name="job_title" >
+        <select id="job_source" name="job_source">
             <option>GL Pinellas</option>
-        </select >
-        <textarea id="job_description"  name="job_description"  placeholder="Job description (optional)"></textarea>
+        </select>
+        <textarea id="job_description" name="job_description" placeholder="Job description (optional)"></textarea>
     </div>
 
     <!-- Service location -->
     <div>
         <h3>Service location</h3>
-        <input id="address" name="address"  type="text" placeholder="Address">
-        <input id="city" name="city"  type="text" placeholder="City">
-        <input id="state" name="state"  type="text" placeholder="State">
-        <select id="location" name="location" >
+        <input id="address" name="address" type="text" placeholder="Address">
+        <input id="city" name="city" type="text" placeholder="City">
+        <input id="state" name="state" type="text" placeholder="State">
+        <input id="zip_code" name="zip_code" type="number" placeholder="Zip code">
+        <select id="area" name="area">
             <option>Tampa</option>
         </select>
     </div>
@@ -59,14 +61,13 @@
     <!-- Scheduled -->
     <div>
         <h3>Scheduled</h3>
-        <input id="date"  name="date" type="date" placeholder="mm/dd/yyyy">
-        <input id="time_from" name="time_from"  type="time" value="08:00">
-        <input id="time_to"  name="time_to" type="time" value="08:00">
-        <select id="technician" name="technician" >
+        <input id="date" name="date" type="date" placeholder="mm/dd/yyyy">
+        <input id="start_time" name="start_time" type="time" value="08:00">
+        <input id="end_time" name="end_time" type="time" value="08:00">
+        <select id="test" name="test">
             <option>Select technician</option>
         </select>
     </div>
-
 
 
     <!-- Buttons -->
@@ -74,18 +75,21 @@
     <button type="button">Save info</button>
 </form>
 <script>
-
     const form = document.querySelector("form")
-    addEventListener("submit",(e)=>{
+    addEventListener("submit", (e) => {
         e.preventDefault();
         const formData = new FormData(form)
         const data = Object.fromEntries(formData)
-       fetch("",{
-           method:"POST",
-           headers:"",
-           body:JSON.stringify(data)
-       })
+
+        fetch("https://5397b00e2407123b5aa4e37147c231c0.serveo.net/api/new-job" + window.location.search, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(data)
+        })
     })
 </script>
 </body>
-</html>`
+</html>
