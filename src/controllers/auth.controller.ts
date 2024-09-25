@@ -9,7 +9,7 @@ export class AuthController {
     }
 
     async auth(req: Request, res: Response) {
-        const code: string = req.query.code.toString()
+        const code:string = String(req.query.code)
         if (code) {
             const auth: CallbackHandlerType = await this.authService.callbackHandler(code)
             if (auth.success) {

@@ -1,6 +1,13 @@
 import {inject, injectable} from "inversify";
 import {MongoDbAdapter} from "../bd/mongodb.adapter";
-import {AuthDBModel, OAuthDataType, UpdateTokenModel, UserDataType, UserType} from "../types/auth.types";
+import {
+    AuthDBModel,
+    OAuthDataType,
+    RefreshTokenDataType,
+    UpdateTokenModel,
+    UserDataType,
+    UserType
+} from "../types/auth.types";
 import {InsertOneResult, ObjectId, UpdateResult, WithId} from "mongodb";
 
 @injectable()
@@ -25,18 +32,18 @@ export class AuthRepository {
                 .connect
                 .collection<AuthDBModel>("users")
                 .insertOne(createUserDto)
-            if (result.insertedId) return true
+            return !!result.insertedId;
         } catch (e) {
             console.log(e)
             return false
         }
     }
 
-    async updateTokens(authData: OAuthDataType, userId: number): Promise<boolean> {
+    async updateTokens(authData: RefreshTokenDataType, createdAt:number, userId: number): Promise<boolean> {
         try {
             const updateDto: UpdateTokenModel = {
                 accessToken: authData.accessToken,
-                expiresAt: authData.expiresIn + authData.createdAt,
+                expiresAt: authData.expiresIn + createdAt,
                 refreshToken: authData.refreshToken,
             }
             const result: UpdateResult<AuthDBModel> = await this.db
@@ -67,7 +74,7 @@ export class AuthRepository {
         }
     }
 
-    private _mapper(input: WithId<AuthDBModel>): UserType {
+    private _mapper(input: any): any {
         const keys = Object.keys(input);
         return keys.reduce((acc: any, key: string) => {
             if (key === '_id') acc.id = input._id.toString();
@@ -76,7 +83,7 @@ export class AuthRepository {
         }, {});
     }
 
-    private _toDbIdMapper(input: UserType): WithId<AuthDBModel> {
+    private _toDbIdMapper(input: any):any {
         const keys = Object.keys(input);
         return keys.reduce((acc: any, key: string) => {
             if (key === 'id') {
