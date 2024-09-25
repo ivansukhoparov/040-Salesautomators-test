@@ -25,7 +25,7 @@ export class AuthService {
         if (oauthData === null) return {success: false, target: null}
         console.log(oauthData)
 console.log(1)
-        const refreshedToken = this.refreshAccessToken(oauthData.refreshToken)
+        const refreshedToken = await this.refreshAccessToken(oauthData.refreshToken)
         console.log("refreshedToken",refreshedToken)
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
         if (userData === null) return {success: false, target: null}
@@ -85,7 +85,7 @@ console.log("urls.client.callback",urls.client.callback)
 
             const response = await fetch(urls.api.authUrl, fetchInit)
             const authResponseRaw: OAuthRawResponseType = await response.json()
-            console.log("authResponseRaw",authResponseRaw)
+console.log("authResponseRaw",authResponseRaw)
             return {
                 accessToken: authResponseRaw.access_token,
                 expiresIn: authResponseRaw.expires_in,
