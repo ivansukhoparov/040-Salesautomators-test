@@ -23,16 +23,16 @@ export class AuthService {
     async callbackHandler(code: string) {
         const oauthData: OAuthDataType | null = await this.oauth(code)
         if (oauthData === null) return {success: false, target: null}
-
+console.log(1)
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
         if (userData === null) return {success: false, target: null}
-
+        console.log(2)
         const isCreated = await this.authRepository.createUser(oauthData, userData)
         if (!isCreated) return {success: false, target: null}
-
+        console.log(3)
         const appFieldsAdded = await this.initJobFields(userData.userId)
         if (!appFieldsAdded) return {success: false, target: null}
-
+        console.log(4)
         return {
             success: true,
             target: oauthData.apiDomain
