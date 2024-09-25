@@ -6,8 +6,6 @@ import {ApiRouter} from "./routers/api.router";
 import {inject, injectable} from "inversify";
 import {MongoDbAdapter} from "./bd/mongodb.adapter";
 
-const cors = require('cors');
-
 @injectable()
 export class App {
     private app = express()
