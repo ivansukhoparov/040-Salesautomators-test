@@ -3,15 +3,16 @@ import {AuthService} from "./auth.service";
 import {newJobRawType} from "../types/job.types";
 import {newDealFields} from "../utils/job.fields";
 import {AuthRepository} from "../repositories/auth.repository";
+import {AccessTokenService} from "./access.token.service";
 
 @injectable()
 export class ApiService {
 
-    constructor(@inject(AuthService) private authService: AuthService) {
+    constructor(@inject(AccessTokenService) private accessTokenService: AccessTokenService) {
     }
 
     async createNewJob(userId: number, createJobRawDto: newJobRawType) {
-        const accessToken = await this.authService.getAccessToken(userId)
+        const accessToken = await this.accessTokenService.authService.getAccessToken(userId)
         if (!accessToken) return false
 
         const newJobDto = {
@@ -41,8 +42,8 @@ export class ApiService {
     }
 
 
-    async initJobFields(userId: number) {
-        const accessToken = await this.authService.getAccessToken(userId)
+    async initJobFields(userId: number):Promise<boolean> {
+        const accessToken = await this.accessTokenService.authService.getAccessToken(userId)
         if (!accessToken) return false
 
         const fetchInit: RequestInit = {
@@ -58,6 +59,8 @@ export class ApiService {
         const response = await fetch(`https://${accessToken.target}/api/v1/deals?api_token=${accessToken.accessToken}`, fetchInit)
 
         const result = await response.json()
+        console.log("initJobFields",result)
+
         return result.success
     }
 

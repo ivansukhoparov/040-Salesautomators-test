@@ -10,6 +10,7 @@ import {ApiService} from "./services/api.service";
 // Controllers
 import {AuthController} from "./routers/controllers/auth.controller";
 import {ApiController} from "./routers/controllers/api.controller";
+import {AccessTokenService} from "./services/access.token.service";
 
 
 export const container = new Container()
@@ -19,7 +20,8 @@ container.bind<MongoDbAdapter>(MongoDbAdapter).toSelf()
 // Repository
 container.bind<AuthRepository>(AuthRepository).toSelf() 
 // Services
-container.bind<AuthService>(AuthService).toSelf() 
+container.bind<AuthService>(AuthService).toSelf()
+container.bind<AccessTokenService>(AccessTokenService).toSelf()
 container.bind<ApiService>(ApiService).toSelf() 
 // Controllers
 container.bind<AuthController>(AuthController).toSelf() 

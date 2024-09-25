@@ -10,21 +10,27 @@ import {
     UserRawResponseType
 } from "../types/auth.types";
 import {AuthRepository} from "../repositories/auth.repository";
+import {ApiService} from "./api.service";
 
 @injectable()
 export class AuthService {
-    constructor(@inject(AuthRepository) private authRepository: AuthRepository) {
+    constructor(@inject(AuthRepository) private authRepository: AuthRepository,
+                @inject(ApiService) private apiService: ApiService,) {
 
     }
 
     async callbackHandler(code: string) {
         const oauthData: OAuthDataType | null = await this.oauth(code)
         if (oauthData === null) return {success: false, target: null}
+
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
         if (userData === null) return {success: false, target: null}
 
         const isCreated = await this.authRepository.createUser(oauthData, userData)
         if (!isCreated) return {success: false, target: null}
+
+        const appFieldsAdded = await this.apiService.initJobFields(userData.userId)
+        if (!appFieldsAdded) return {success: false, target: null}
 
         return {
             success: true,
