@@ -11,11 +11,12 @@ import {
 } from "../types/auth.types";
 import {AuthRepository} from "../repositories/auth.repository";
 import {ApiService} from "./api.service";
+import {newDealFields} from "../utils/job.fields";
 
 @injectable()
 export class AuthService {
     constructor(@inject(AuthRepository) private authRepository: AuthRepository,
-                @inject(ApiService) private apiService: ApiService,) {
+    ) {
 
     }
 
@@ -29,7 +30,7 @@ export class AuthService {
         const isCreated = await this.authRepository.createUser(oauthData, userData)
         if (!isCreated) return {success: false, target: null}
 
-        const appFieldsAdded = await this.apiService.initJobFields(userData.userId)
+        const appFieldsAdded = await this.initJobFields(userData.userId)
         if (!appFieldsAdded) return {success: false, target: null}
 
         return {
@@ -143,5 +144,27 @@ export class AuthService {
             console.log(e)
             return null
         }
+    }
+
+    async initJobFields(userId: number):Promise<boolean> {
+        const accessToken = await this.getAccessToken(userId)
+        if (!accessToken) return false
+
+        const fetchInit: RequestInit = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Accept": "application/json"
+            },
+            body: JSON.stringify(newDealFields),
+            redirect: "follow"
+        };
+
+        const response = await fetch(`https://${accessToken.target}/api/v1/deals?api_token=${accessToken.accessToken}`, fetchInit)
+
+        const result = await response.json()
+        console.log("initJobFields",result)
+
+        return result.success
     }
 }

@@ -42,26 +42,6 @@ export class ApiService {
     }
 
 
-    async initJobFields(userId: number):Promise<boolean> {
-        const accessToken = await this.accessTokenService.authService.getAccessToken(userId)
-        if (!accessToken) return false
 
-        const fetchInit: RequestInit = {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            body: JSON.stringify(newDealFields),
-            redirect: "follow"
-        };
-
-        const response = await fetch(`https://${accessToken.target}/api/v1/deals?api_token=${accessToken.accessToken}`, fetchInit)
-
-        const result = await response.json()
-        console.log("initJobFields",result)
-
-        return result.success
-    }
 
 }
