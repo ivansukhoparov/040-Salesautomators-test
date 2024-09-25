@@ -4,7 +4,8 @@ import {inject, injectable} from "inversify";
 import {
     CallbackHandlerType,
     OAuthDataType,
-    OAuthRawResponseType, RefreshTokenDataType, UpdateTokenModel,
+    OAuthRawResponseType,
+    RefreshTokenDataType,
     UserDataType,
     UserRawResponseType
 } from "../types/auth.types";
@@ -12,17 +13,17 @@ import {AuthRepository} from "../repositories/auth.repository";
 
 @injectable()
 export class AuthService {
-    constructor(@inject(AuthRepository) private authRepository:AuthRepository) {
+    constructor(@inject(AuthRepository) private authRepository: AuthRepository) {
     }
 
     async callbackHandler(code: string): Promise<CallbackHandlerType> {
         const oauthData: OAuthDataType | null = await this.oauth(code)
-        if (oauthData === null) return {success:false}
+        if (oauthData === null) return {success: false}
         const userData: UserDataType | null = await this.getUserData(oauthData.accessToken)
-        if (userData === null) return {success:false}
+        if (userData === null) return {success: false}
 
-        const isCreated = await this.authRepository.createUser(oauthData,userData)
-        if (!isCreated) return {success:false}
+        const isCreated = await this.authRepository.createUser(oauthData, userData)
+        if (!isCreated) return {success: false}
 
         return {
             success: true,
@@ -30,21 +31,27 @@ export class AuthService {
         }
     }
 
-    async getAccessToken(userId:number){
+    async getAccessToken(userId: number) {
         const currentTime = new Date().getTime()
 
         const user = await this.authRepository.getUser(userId)
         if (user === null) return null
 
-        if (user.expiresAt<currentTime){
-           const refreshedToken:RefreshTokenDataType|null = await this.refreshAccessToken(user.refreshToken)
-            if (refreshedToken===null) return null
-            const isUpdated = await this.authRepository.updateTokens(refreshedToken,currentTime,user.userId)
+        if (user.expiresAt < currentTime) {
+            const refreshedToken: RefreshTokenDataType | null = await this.refreshAccessToken(user.refreshToken)
+            if (refreshedToken === null) return null
+            const isUpdated = await this.authRepository.updateTokens(refreshedToken, currentTime, user.userId)
             if (!isUpdated) return null
 
-            return refreshedToken.accessToken
-        }  else {
-            return user.accessToken
+            return {
+                accessToken: refreshedToken.accessToken,
+                target: user.apiDomain
+            }
+        } else {
+            return {
+                accessToken: user.accessToken,
+                target: user.apiDomain
+            }
         }
     }
 
@@ -73,7 +80,7 @@ export class AuthService {
                 expiresIn: authResponseRaw.expires_in,
                 refreshToken: authResponseRaw.refresh_token,
                 apiDomain: authResponseRaw.api_domain,
-                createdAt:new Date().getTime()
+                createdAt: new Date().getTime()
             }
         } catch (e) {
             console.log(e)
@@ -101,7 +108,7 @@ export class AuthService {
         }
     }
 
-    async refreshAccessToken(refreshToken:string):Promise<RefreshTokenDataType|null>{
+    async refreshAccessToken(refreshToken: string): Promise<RefreshTokenDataType | null> {
         try {
             const formData = new URLSearchParams();
             formData.append('grant_type', 'refresh_token');
